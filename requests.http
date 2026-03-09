@@ -1,0 +1,7 @@
+POST http://localhost:8080/api/organizations
+Content-Type: application/json
+
+{
+  "name": "Ministry of Health",
+  "code": "MOH"
+}
