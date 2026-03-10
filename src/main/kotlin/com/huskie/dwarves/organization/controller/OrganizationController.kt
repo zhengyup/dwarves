@@ -8,7 +8,7 @@ import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/organizations")
+@RequestMapping("/api/organization")
 class OrganizationController(
         private val organizationService: OrganizationService
 ) {
