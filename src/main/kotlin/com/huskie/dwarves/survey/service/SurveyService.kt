@@ -65,6 +65,7 @@ class SurveyService (
                 id = requireNotNull(this.id),
                 organizationId = requireNotNull(this.organization.id),
                 name = this.name,
+                description = this.description,
                 createdAt = this.createdAt
         )
     }
