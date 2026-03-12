@@ -46,6 +46,6 @@ class SurveyController (
 
     @DeleteMapping("/{id}")
     fun deleteSurvey(@PathVariable id : Long) {
-        return surveyService.deleteSurvey(id)
+        surveyService.deleteSurvey(id)
     }
 }
