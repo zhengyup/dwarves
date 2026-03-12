@@ -4,7 +4,7 @@ import com.huskie.dwarves.organization.dto.CreateOrganizationRequest
 import com.huskie.dwarves.organization.dto.OrganizationResponse
 import com.huskie.dwarves.organization.dto.UpdateOrganizationRequest
 import com.huskie.dwarves.organization.entity.Organization
-import com.huskie.dwarves.organization.exception.OrganizationNotFoundException
+import com.huskie.dwarves.organization.exceptions.OrganizationNotFoundException
 import com.huskie.dwarves.organization.repository.OrganizationRepository
 import org.springframework.stereotype.Service
 

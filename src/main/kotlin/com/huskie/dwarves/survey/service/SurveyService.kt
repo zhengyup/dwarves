@@ -1,12 +1,12 @@
 package com.huskie.dwarves.survey.service
 
-import com.huskie.dwarves.organization.exception.OrganizationNotFoundException
+import com.huskie.dwarves.organization.exceptions.OrganizationNotFoundException
 import com.huskie.dwarves.organization.repository.OrganizationRepository
 import com.huskie.dwarves.survey.dto.CreateSurveyRequest
 import com.huskie.dwarves.survey.dto.SurveyResponse
 import com.huskie.dwarves.survey.dto.UpdateSurveyRequest
 import com.huskie.dwarves.survey.entity.Survey
-import com.huskie.dwarves.survey.exception.SurveyNotFoundException
+import com.huskie.dwarves.survey.exceptions.SurveyNotFoundException
 import com.huskie.dwarves.survey.repository.SurveyRepository
 import org.springframework.stereotype.Service
 
@@ -66,7 +66,6 @@ class SurveyService (
                 organizationId = requireNotNull(this.organization.id),
                 name = this.name,
                 description = this.description,
-                createdAt = this.createdAt
         )
     }
 }

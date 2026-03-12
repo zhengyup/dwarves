@@ -3,7 +3,7 @@ package com.huskie.dwarves.organization.service
 import com.huskie.dwarves.organization.dto.CreateOrganizationRequest
 import com.huskie.dwarves.organization.dto.UpdateOrganizationRequest
 import com.huskie.dwarves.organization.entity.Organization
-import com.huskie.dwarves.organization.exception.OrganizationNotFoundException
+import com.huskie.dwarves.organization.exceptions.OrganizationNotFoundException
 import com.huskie.dwarves.organization.repository.OrganizationRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -16,7 +16,6 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.time.LocalDateTime
 import java.util.Optional
-import org.mockito.kotlin.doReturn
 
 class OrganizationServiceTest {
 
