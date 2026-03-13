@@ -8,7 +8,7 @@ import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/survey")
+@RequestMapping("/api/surveyQuestion")
 class SurveyQuestionController (
     private val surveyQuestionService : SurveyQuestionService
 ) {
@@ -34,7 +34,7 @@ class SurveyQuestionController (
             @PathVariable id: Long,
             @Valid @RequestBody request : UpdateSurveyQuestionRequest
     ) : SurveyQuestionResponse {
-        return surveyQuestionService.updateSurveyQuestion(request)
+        return surveyQuestionService.updateSurveyQuestion(id, request)
     }
 
     @DeleteMapping("/{id}")

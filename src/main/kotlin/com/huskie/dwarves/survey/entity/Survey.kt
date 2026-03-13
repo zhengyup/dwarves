@@ -21,6 +21,6 @@ class Survey (
         @Column
         val description : String? = null,
 
-        @Column(name= "created at", nullable = false)
+        @Column(name= "created_at", nullable = false)
         val createdAt : LocalDateTime = LocalDateTime.now()
 )

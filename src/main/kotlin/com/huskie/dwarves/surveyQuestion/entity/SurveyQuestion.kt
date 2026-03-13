@@ -31,6 +31,6 @@ class SurveyQuestion (
         @Column(nullable = false)
         val displayOrder: Int,
 
-        @Column(name= "created at", nullable = false)
+        @Column(name= "created_at", nullable = false)
         val createdAt : LocalDateTime = LocalDateTime.now()
 )

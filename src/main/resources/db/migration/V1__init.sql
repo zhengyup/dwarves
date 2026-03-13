@@ -7,7 +7,7 @@ create table organization (
 
 create table if not exists survey (
     id bigserial PRIMARY KEY,
-    organization_id bigserial NOT NULL,
+    organization_id bigint NOT NULL,
     name varchar(255) NOT NULL,
     description TEXT,
     created_at TIMESTAMP NOT NULL DEFAULT now(),

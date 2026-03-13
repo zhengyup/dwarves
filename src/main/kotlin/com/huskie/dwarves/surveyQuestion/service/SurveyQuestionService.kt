@@ -35,20 +35,25 @@ class SurveyQuestionService (
     }
 
     fun getSurveyQuestionsBySurveyId(surveyId: Long) : List<SurveyQuestionResponse>{
+        surveyRepository.findById(surveyId).orElseThrow{SurveyNotFoundException(surveyId)}
         return surveyQuestionRepository.findBySurveyIdOrderByDisplayOrderAsc(surveyId)
                 .map { it.toResponse() }
     }
 
-    fun updateSurveyQuestion(updateSurveyQuestionRequest: UpdateSurveyQuestionRequest) :
+    fun updateSurveyQuestion(id: Long, updateSurveyQuestionRequest: UpdateSurveyQuestionRequest) :
             SurveyQuestionResponse{
+        val existing = surveyQuestionRepository.findById(id)
+                .orElseThrow{SurveyQuestionNotFoundException(id)}
         val reqSurvey = surveyRepository.findById(updateSurveyQuestionRequest.surveyId)
                 .orElseThrow{SurveyNotFoundException(updateSurveyQuestionRequest.surveyId)}
         val surveyQuestion = SurveyQuestion(
+                id = existing.id,
                 survey = reqSurvey,
                 questionText = updateSurveyQuestionRequest.questionText,
                 questionType = updateSurveyQuestionRequest.questionType,
                 isRequired = updateSurveyQuestionRequest.isRequired,
-                displayOrder = updateSurveyQuestionRequest.displayOrder
+                displayOrder = updateSurveyQuestionRequest.displayOrder,
+                createdAt = existing.createdAt
         )
         val saved = surveyQuestionRepository.save(surveyQuestion)
         return saved.toResponse()
