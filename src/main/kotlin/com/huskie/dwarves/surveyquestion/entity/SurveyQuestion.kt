@@ -1,9 +1,7 @@
-package com.huskie.dwarves.surveyQuestion.entity
+package com.huskie.dwarves.surveyquestion.entity
 
 import com.huskie.dwarves.survey.entity.Survey
 import jakarta.persistence.*
-import org.springframework.cglib.core.Local
-import java.math.BigInteger
 import java.time.LocalDateTime
 
 

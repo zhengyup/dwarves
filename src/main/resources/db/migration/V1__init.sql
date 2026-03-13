@@ -35,3 +35,4 @@ create index idx_survey_question_survey_id
 
 create index idx_survey_question_survey_id_display_order
     on survey_question(survey_id, display_order);
+

@@ -1,9 +1,9 @@
-package com.huskie.dwarves.surveyQuestion.controller
+package com.huskie.dwarves.surveyquestion.controller
 
-import com.huskie.dwarves.surveyQuestion.dto.CreateSurveyQuestionRequest
-import com.huskie.dwarves.surveyQuestion.dto.SurveyQuestionResponse
-import com.huskie.dwarves.surveyQuestion.dto.UpdateSurveyQuestionRequest
-import com.huskie.dwarves.surveyQuestion.service.SurveyQuestionService
+import com.huskie.dwarves.surveyquestion.dto.CreateSurveyQuestionRequest
+import com.huskie.dwarves.surveyquestion.dto.SurveyQuestionResponse
+import com.huskie.dwarves.surveyquestion.dto.UpdateSurveyQuestionRequest
+import com.huskie.dwarves.surveyquestion.service.SurveyQuestionService
 import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.*
 

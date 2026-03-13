@@ -1,8 +1,4 @@
-package com.huskie.dwarves.surveyQuestion.dto
-
-import com.huskie.dwarves.survey.entity.Survey
-import jakarta.persistence.*
-import java.time.LocalDateTime
+package com.huskie.dwarves.surveyquestion.dto
 
 class SurveyQuestionResponse (
         val id: Long? = null,

@@ -1,15 +1,15 @@
-package com.huskie.dwarves.surveyQuestion.service
+package com.huskie.dwarves.surveyquestion.service
 
 import com.huskie.dwarves.organization.entity.Organization
 import com.huskie.dwarves.survey.entity.Survey
 import com.huskie.dwarves.survey.exceptions.SurveyNotFoundException
 import com.huskie.dwarves.survey.repository.SurveyRepository
-import com.huskie.dwarves.surveyQuestion.dto.CreateSurveyQuestionRequest
-import com.huskie.dwarves.surveyQuestion.dto.SurveyQuestionResponse
-import com.huskie.dwarves.surveyQuestion.dto.UpdateSurveyQuestionRequest
-import com.huskie.dwarves.surveyQuestion.entity.SurveyQuestion
-import com.huskie.dwarves.surveyQuestion.exceptions.SurveyQuestionNotFoundException
-import com.huskie.dwarves.surveyQuestion.repository.SurveyQuestionRepository
+import com.huskie.dwarves.surveyquestion.dto.CreateSurveyQuestionRequest
+import com.huskie.dwarves.surveyquestion.dto.SurveyQuestionResponse
+import com.huskie.dwarves.surveyquestion.dto.UpdateSurveyQuestionRequest
+import com.huskie.dwarves.surveyquestion.entity.SurveyQuestion
+import com.huskie.dwarves.surveyquestion.exceptions.SurveyQuestionNotFoundException
+import com.huskie.dwarves.surveyquestion.repository.SurveyQuestionRepository
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.mockito.kotlin.*

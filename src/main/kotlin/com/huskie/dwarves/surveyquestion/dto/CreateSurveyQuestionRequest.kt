@@ -1,4 +1,4 @@
-package com.huskie.dwarves.surveyQuestion.dto
+package com.huskie.dwarves.surveyquestion.dto
 
 import jakarta.validation.constraints.NotBlank
 
