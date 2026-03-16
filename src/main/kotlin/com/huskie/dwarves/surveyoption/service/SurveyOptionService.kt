@@ -17,7 +17,7 @@ class SurveyOptionService(
         private val surveyQuestionRepository: SurveyQuestionRepository
 ) {
     fun createSurveyOption(request: CreateSurveyOptionRequest): SurveyOptionResponse {
-        surveyQuestionRepository.findById(request.surveyQuestionId)
+        val question = surveyQuestionRepository.findById(request.surveyQuestionId)
                 .orElseThrow {
                     SurveyQuestionNotFoundException(request.surveyQuestionId)
                 }
@@ -34,7 +34,7 @@ class SurveyOptionService(
 
         val savedOption = surveyOptionRepository.save(
                 SurveyOption(
-                        surveyQuestionId = request.surveyQuestionId,
+                        surveyQuestion = question,
                         optionText = request.optionText,
                         optionValue = request.optionValue,
                         displayOrder = request.displayOrder
@@ -69,13 +69,17 @@ class SurveyOptionService(
                     SurveyOptionNotFoundException("Survey option with id $id not found")
                 }
 
+        val surveyQuestionId = existingOption.surveyQuestion.id
+                ?: throw IllegalStateException("Survey question id should not be null")
+
         val conflictingOption = surveyOptionRepository
-                .findBySurveyQuestionIdOrderByDisplayOrderAsc(existingOption.surveyQuestionId)
+                .findBySurveyQuestionIdOrderByDisplayOrderAsc(surveyQuestionId)
                 .firstOrNull { it.displayOrder == request.displayOrder && it.id != id }
 
         if (conflictingOption != null) {
             throw DuplicateSurveyOptionDisplayOrderException(
-                    "Display order ${request.displayOrder} already exists for survey question ${existingOption.surveyQuestionId}"
+                    "Display order ${request.displayOrder} already exists for survey question " +
+                            "${existingOption.surveyQuestion.id}"
             )
         }
 
@@ -98,9 +102,12 @@ class SurveyOptionService(
     }
 
     private fun SurveyOption.toResponse(): SurveyOptionResponse {
+        val surveyQuestionId = this.surveyQuestion.id
+                ?: throw IllegalStateException("Survey question id should not be null")
+
         return SurveyOptionResponse(
                 id = this.id,
-                surveyQuestionId = this.surveyQuestionId,
+                surveyQuestionId = surveyQuestionId,
                 optionText = this.optionText,
                 optionValue = this.optionValue,
                 displayOrder = this.displayOrder,

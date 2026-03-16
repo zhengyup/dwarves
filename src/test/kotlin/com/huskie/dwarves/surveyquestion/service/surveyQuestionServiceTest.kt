@@ -1,6 +1,7 @@
 package com.huskie.dwarves.surveyquestion.service
 
 import com.huskie.dwarves.organization.entity.Organization
+import com.huskie.dwarves.survey.dto.CreateSurveyRequest
 import com.huskie.dwarves.survey.entity.Survey
 import com.huskie.dwarves.survey.exceptions.SurveyNotFoundException
 import com.huskie.dwarves.survey.repository.SurveyRepository
@@ -8,6 +9,7 @@ import com.huskie.dwarves.surveyquestion.dto.CreateSurveyQuestionRequest
 import com.huskie.dwarves.surveyquestion.dto.SurveyQuestionResponse
 import com.huskie.dwarves.surveyquestion.dto.UpdateSurveyQuestionRequest
 import com.huskie.dwarves.surveyquestion.entity.SurveyQuestion
+import com.huskie.dwarves.surveyquestion.exceptions.DuplicateSurveyQuestionDisplayOrderException
 import com.huskie.dwarves.surveyquestion.exceptions.SurveyQuestionNotFoundException
 import com.huskie.dwarves.surveyquestion.repository.SurveyQuestionRepository
 import org.junit.jupiter.api.Test
@@ -87,6 +89,29 @@ class SurveyQuestionServiceTest {
         }
         verify(surveyRepository, times(1)).findById(1L)
     }
+
+    @Test
+    fun `create survey question should throw error when question with existing display order exists`() {
+        val request = CreateSurveyQuestionRequest(
+                surveyId = 1L,
+                questionType = "Open-ended",
+                isRequired = true,
+                displayOrder = 1,
+                questionText = "How many types of diabetes are there"
+        )
+
+        whenever(surveyRepository.findById(1L)).thenReturn(Optional.of(mockSurvey))
+        whenever(surveyQuestionRepository.existsBySurveyIdAndDisplayOrder(
+               request.surveyId, request.displayOrder
+        )).thenReturn(true)
+
+        assertThrows(DuplicateSurveyQuestionDisplayOrderException::class.java) {
+            surveyQuestionService.createSurveyQuestion(request)
+        }
+        verify(surveyQuestionRepository, times(1)).existsBySurveyIdAndDisplayOrder(request.surveyId,
+                request.displayOrder)
+    }
+
 
     @Test
     fun `get survey question by id should return survey questions in order for a survey`() {
@@ -210,6 +235,46 @@ class SurveyQuestionServiceTest {
             surveyQuestionService.updateSurveyQuestion(1L, request)
         }
         verify(surveyRepository, times(1)).findById(2L)
+    }
+
+    @Test
+    fun `update survey should throw when question with same displayOrder exists`() {
+        val existingQuestion = SurveyQuestion(
+                id = 1L,
+                survey = mockSurvey,
+                questionType = "Open-ended",
+                isRequired = true,
+                displayOrder = 1,
+                questionText = "How many types of diabetes are there"
+        )
+
+        val conflictingQuestion = SurveyQuestion(
+                id = 2L,
+                survey = mockSurvey,
+                questionType = "MCQ",
+                isRequired = true,
+                displayOrder = 2,
+                questionText = "What percentage of those in their 30s have diabetes"
+        )
+
+        val request = UpdateSurveyQuestionRequest(
+                surveyId = 1L,
+                questionType = "MRQ",
+                isRequired = false,
+                displayOrder = 2,
+                questionText = "What percentage of adults have diabetes in Singapore"
+        )
+
+        whenever(surveyQuestionRepository.findById(1L)).thenReturn(Optional.of(existingQuestion))
+        whenever(surveyRepository.findById(1L)).thenReturn(Optional.of(mockSurvey))
+        whenever(surveyQuestionRepository.findBySurveyIdOrderByDisplayOrderAsc(1L))
+                .thenReturn(listOf(existingQuestion, conflictingQuestion))
+
+        assertThrows(DuplicateSurveyQuestionDisplayOrderException::class.java) {
+            surveyQuestionService.updateSurveyQuestion(1L, request)
+        }
+        verify(surveyRepository, times(1)).findById(1L)
+        verify(surveyQuestionRepository, times(1)).findBySurveyIdOrderByDisplayOrderAsc(1L)
     }
 
     @Test

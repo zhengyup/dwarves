@@ -3,9 +3,11 @@ package com.huskie.dwarves.surveyquestion.service
 import com.huskie.dwarves.surveyquestion.dto.UpdateSurveyQuestionRequest
 import com.huskie.dwarves.survey.exceptions.SurveyNotFoundException
 import com.huskie.dwarves.survey.repository.SurveyRepository
+import com.huskie.dwarves.surveyoption.exceptions.DuplicateSurveyOptionDisplayOrderException
 import com.huskie.dwarves.surveyquestion.dto.CreateSurveyQuestionRequest
 import com.huskie.dwarves.surveyquestion.dto.SurveyQuestionResponse
 import com.huskie.dwarves.surveyquestion.entity.SurveyQuestion
+import com.huskie.dwarves.surveyquestion.exceptions.DuplicateSurveyQuestionDisplayOrderException
 import com.huskie.dwarves.surveyquestion.exceptions.SurveyQuestionNotFoundException
 import com.huskie.dwarves.surveyquestion.repository.SurveyQuestionRepository
 import org.springframework.stereotype.Service
@@ -19,6 +21,18 @@ class SurveyQuestionService (
     fun createSurveyQuestion(createSurveyQuestionRequest: CreateSurveyQuestionRequest) : SurveyQuestionResponse {
         val reqSurvey = surveyRepository.findById(createSurveyQuestionRequest.surveyId)
                 .orElseThrow{SurveyNotFoundException(createSurveyQuestionRequest.surveyId)}
+
+        if (surveyQuestionRepository.existsBySurveyIdAndDisplayOrder(
+                        createSurveyQuestionRequest.surveyId,
+                        createSurveyQuestionRequest.displayOrder
+                )
+        ) {
+            throw DuplicateSurveyQuestionDisplayOrderException(
+                    createSurveyQuestionRequest.surveyId,
+                    createSurveyQuestionRequest.displayOrder
+            )
+        }
+
         val surveyQuestion = SurveyQuestion(
                 survey = reqSurvey,
                 questionText = createSurveyQuestionRequest.questionText,
@@ -46,6 +60,21 @@ class SurveyQuestionService (
                 .orElseThrow{SurveyQuestionNotFoundException(id)}
         val reqSurvey = surveyRepository.findById(updateSurveyQuestionRequest.surveyId)
                 .orElseThrow{SurveyNotFoundException(updateSurveyQuestionRequest.surveyId)}
+
+        val surveyQuestionId = existing.survey.id
+                ?: throw IllegalStateException("Survey id should not be null")
+
+        val conflictingOption = surveyQuestionRepository
+                .findBySurveyIdOrderByDisplayOrderAsc(surveyQuestionId)
+                .firstOrNull { it.displayOrder == updateSurveyQuestionRequest.displayOrder && it.id != id }
+
+        if (conflictingOption != null) {
+            throw DuplicateSurveyQuestionDisplayOrderException(
+                    surveyQuestionId,
+                    updateSurveyQuestionRequest.displayOrder
+            )
+        }
+
         val surveyQuestion = SurveyQuestion(
                 id = existing.id,
                 survey = reqSurvey,

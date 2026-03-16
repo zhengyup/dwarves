@@ -1,5 +1,6 @@
 package com.huskie.dwarves.surveyoption.entity
 
+import com.huskie.dwarves.surveyquestion.entity.SurveyQuestion
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -18,8 +19,9 @@ data class SurveyOption(
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         val id: Long = 0,
 
-        @Column(name = "survey_question_id", nullable = false)
-        val surveyQuestionId: Long,
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "survey_question_id", nullable = false)
+        val surveyQuestion: SurveyQuestion,
 
         @Column(name = "option_text", nullable = false)
         val optionText: String,
