@@ -1,5 +1,6 @@
 package com.huskie.dwarves.common
 
+import com.huskie.dwarves.interviewer.exception.InterviewerNotFoundException
 import com.huskie.dwarves.organization.entity.Organization
 import com.huskie.dwarves.surveyoption.exceptions.*
 import com.huskie.dwarves.surveyquestion.exceptions.*
@@ -43,5 +44,11 @@ class GlobalExceptionHandler {
     fun handleDuplicateDisplayOrder(ex: DuplicateSurveyOptionDisplayOrderException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ErrorResponse(ex.message ?: "Duplicate display order"))
+    }
+
+    @ExceptionHandler(InterviewerNotFoundException::class)
+    fun handleInterviewerNotFound(ex: InterviewerNotFoundException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ErrorResponse(ex.message ?: "Interviewer not found"))
     }
 }
