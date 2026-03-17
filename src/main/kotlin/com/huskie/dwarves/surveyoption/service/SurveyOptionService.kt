@@ -47,7 +47,7 @@ class SurveyOptionService(
     fun getSurveyOptionById(id: Long): SurveyOptionResponse {
         val option = surveyOptionRepository.findById(id)
                 .orElseThrow {
-                    SurveyOptionNotFoundException("Survey option with id $id not found")
+                    SurveyOptionNotFoundException(id)
                 }
 
         return option.toResponse()
@@ -66,7 +66,7 @@ class SurveyOptionService(
     fun updateSurveyOption(id: Long, request: UpdateSurveyOptionRequest): SurveyOptionResponse {
         val existingOption = surveyOptionRepository.findById(id)
                 .orElseThrow {
-                    SurveyOptionNotFoundException("Survey option with id $id not found")
+                    SurveyOptionNotFoundException(id)
                 }
 
         val surveyQuestionId = existingOption.surveyQuestion.id
@@ -95,7 +95,7 @@ class SurveyOptionService(
     fun deleteSurveyOption(id: Long) {
         val option = surveyOptionRepository.findById(id)
                 .orElseThrow {
-                    SurveyOptionNotFoundException("Survey option with id $id not found")
+                    SurveyOptionNotFoundException(id)
                 }
 
         surveyOptionRepository.delete(option)

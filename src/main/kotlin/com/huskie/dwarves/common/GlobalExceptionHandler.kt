@@ -1,5 +1,6 @@
 package com.huskie.dwarves.common
 
+import com.huskie.dwarves.answer.exceptions.AnswerNotFoundException
 import com.huskie.dwarves.interviewer.exception.InterviewerNotFoundException
 import com.huskie.dwarves.organization.entity.Organization
 import com.huskie.dwarves.surveyoption.exceptions.*
@@ -50,5 +51,11 @@ class GlobalExceptionHandler {
     fun handleInterviewerNotFound(ex: InterviewerNotFoundException): ResponseEntity<ErrorResponse> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ErrorResponse(ex.message ?: "Interviewer not found"))
+    }
+
+    @ExceptionHandler(AnswerNotFoundException::class)
+    fun handleAnswerNotFound(ex: AnswerNotFoundException): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ErrorResponse(ex.message ?: "Answer not found"))
     }
 }
