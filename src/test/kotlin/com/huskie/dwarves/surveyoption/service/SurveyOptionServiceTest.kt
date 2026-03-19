@@ -1,7 +1,6 @@
 package com.huskie.dwarves.surveyoption
 
-import com.huskie.dwarves.organization.entity.Organization
-import com.huskie.dwarves.survey.entity.Survey
+
 import com.huskie.dwarves.surveyoption.dto.CreateSurveyOptionRequest
 import com.huskie.dwarves.surveyoption.dto.UpdateSurveyOptionRequest
 import com.huskie.dwarves.surveyoption.entity.SurveyOption
@@ -10,7 +9,7 @@ import com.huskie.dwarves.surveyoption.exceptions.SurveyOptionNotFoundException
 import com.huskie.dwarves.surveyoption.repository.SurveyOptionRepository
 import com.huskie.dwarves.surveyquestion.exceptions.SurveyQuestionNotFoundException
 import com.huskie.dwarves.surveyquestion.repository.SurveyQuestionRepository
-import com.huskie.dwarves.surveyquestion.entity.SurveyQuestion
+import com.huskie.dwarves.util.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -303,60 +302,4 @@ class SurveyOptionServiceTest {
         verify(surveyOptionRepository).findById(2L)
         verify(surveyOptionRepository, never()).delete(any<SurveyOption>())
     }
-
-    private fun makeOrganization(
-            id: Long = 1L,
-            name: String = "Ministry of Health",
-            code: String = "MOH"
-    ) = Organization(
-            id = id,
-            name = name,
-            code = code,
-            createdAt = LocalDateTime.now()
-    )
-
-    private fun makeSurvey(
-            id: Long = 1L,
-            organization: Organization = makeOrganization(),
-            name: String = "Health Survey",
-            description: String = "Survey description"
-    ) = Survey(
-            id = id,
-            organization = organization,
-            name = name,
-            description = description,
-            createdAt = LocalDateTime.now()
-    )
-
-    private fun makeSurveyQuestion(
-            id: Long = 1L,
-            survey: Survey = makeSurvey(),
-            questionText: String = "Do you exercise regularly?",
-            questionType: String = "MULTIPLE_CHOICE",
-            isRequired: Boolean = true,
-            displayOrder: Int = 1
-    ) = SurveyQuestion(
-            id = id,
-            survey = survey,
-            questionText = questionText,
-            questionType = questionType,
-            isRequired = isRequired,
-            displayOrder = displayOrder,
-            createdAt = LocalDateTime.now()
-    )
-
-    private fun makeSurveyOption(
-            id: Long = 1L,
-            surveyQuestion: SurveyQuestion = makeSurveyQuestion(),
-            optionText: String = "Yes",
-            optionValue: String? = "YES",
-            displayOrder: Int = 1
-    ) = SurveyOption(
-            id = id,
-            surveyQuestion = surveyQuestion,
-            optionText = optionText,
-            optionValue = optionValue,
-            displayOrder = displayOrder,
-            createdAt = LocalDateTime.now()
-    )
 }

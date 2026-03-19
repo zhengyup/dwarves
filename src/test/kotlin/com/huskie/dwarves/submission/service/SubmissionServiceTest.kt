@@ -12,6 +12,7 @@ import com.huskie.dwarves.submission.repository.SubmissionRepository
 import com.huskie.dwarves.survey.entity.Survey
 import com.huskie.dwarves.survey.exceptions.SurveyNotFoundException
 import com.huskie.dwarves.survey.repository.SurveyRepository
+import com.huskie.dwarves.util.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
@@ -20,7 +21,6 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import java.time.LocalDateTime
 import java.util.Optional
 
 class SubmissionServiceTest {
@@ -322,50 +322,4 @@ class SubmissionServiceTest {
         verify(submissionRepository).findById(99L)
         verify(submissionRepository, never()).delete(any<Submission>())
     }
-
-    private fun makeOrganization(
-            id: Long? = 1L,
-            name: String = "Ministry of Health",
-            code: String = "MOH"
-    ) = Organization(
-            id = id,
-            name = name,
-            code = code,
-            createdAt = LocalDateTime.now()
-    )
-
-    private fun makeSurvey(
-            id: Long? = 1L,
-            organization: Organization = makeOrganization(),
-            name: String = "Health Survey",
-            description: String = "Survey description"
-    ) = Survey(
-            id = id,
-            organization = organization,
-            name = name,
-            description = description,
-            createdAt = LocalDateTime.now()
-    )
-
-    private fun makeInterviewer(
-            id: Long? = 1L,
-            name: String = "John Tan",
-            email: String? = "john.tan@example.com"
-    ) = Interviewer(
-            id = id,
-            name = name,
-            email = email,
-            createdAt = LocalDateTime.now()
-    )
-
-    private fun makeSubmission(
-            id: Long? = 10L,
-            interviewer: Interviewer = makeInterviewer(),
-            survey: Survey = makeSurvey()
-    ) = Submission(
-            id = id,
-            interviewer = interviewer,
-            survey = survey,
-            createdAt = LocalDateTime.now()
-    )
 }
