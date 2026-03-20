@@ -5,6 +5,7 @@ import com.huskie.dwarves.interviewer.dto.UpdateInterviewerRequest
 import com.huskie.dwarves.interviewer.entity.Interviewer
 import com.huskie.dwarves.interviewer.exception.InterviewerNotFoundException
 import com.huskie.dwarves.interviewer.repository.InterviewerRepository
+import com.huskie.dwarves.util.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.Test
@@ -178,15 +179,4 @@ class InterviewerServiceTest {
         verify(interviewerRepository).findById(99L)
         verify(interviewerRepository, never()).delete(any<Interviewer>())
     }
-
-    private fun makeInterviewer(
-            id: Long? = 1L,
-            name: String = "John Tan",
-            email: String? = "john.tan@example.com"
-    ) = Interviewer(
-            id = id,
-            name = name,
-            email = email,
-            createdAt = LocalDateTime.now()
-    )
 }

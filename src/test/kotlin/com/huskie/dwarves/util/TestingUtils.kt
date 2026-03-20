@@ -1,5 +1,6 @@
 package com.huskie.dwarves.util
 
+import com.huskie.dwarves.answer.entity.Answer
 import com.huskie.dwarves.interviewer.entity.Interviewer
 import com.huskie.dwarves.organization.entity.Organization
 import com.huskie.dwarves.submission.entity.Submission
@@ -83,4 +84,20 @@ import java.time.LocalDateTime
             optionValue = optionValue,
             displayOrder = displayOrder,
             createdAt = LocalDateTime.now()
-)
+    )
+
+    fun makeAnswer(
+            id: Long? = 1L,
+            submission: Submission = makeSubmission(),
+            surveyQuestion: SurveyQuestion = makeSurveyQuestion(),
+            surveyOption: SurveyOption? = null,
+            answerText: String? = null
+    ) = Answer(
+            id = id,
+            submission = submission,
+            surveyQuestion = surveyQuestion,
+            surveyOption = surveyOption,
+            answerText = answerText,
+            createdAt = LocalDateTime.now()
+    )
+
