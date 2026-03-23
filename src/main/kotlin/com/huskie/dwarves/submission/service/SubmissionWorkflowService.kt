@@ -10,7 +10,9 @@ import com.huskie.dwarves.submission.dto.SubmitAnswerRequest
 import com.huskie.dwarves.submission.dto.SubmitSurveyRequest
 import com.huskie.dwarves.submission.dto.SubmitSurveyResponse
 import com.huskie.dwarves.submission.entity.Submission
+import com.huskie.dwarves.submission.exceptions.IncorrectAnswerTypeException
 import com.huskie.dwarves.submission.exceptions.MissingRequiredAnswerException
+import com.huskie.dwarves.submission.exceptions.OverlappingAnswerException
 import com.huskie.dwarves.submission.repository.SubmissionRepository
 import com.huskie.dwarves.survey.exceptions.SurveyNotFoundException
 import com.huskie.dwarves.survey.repository.SurveyRepository
@@ -20,6 +22,8 @@ import com.huskie.dwarves.surveyoption.repository.SurveyOptionRepository
 import com.huskie.dwarves.surveyquestion.entity.SurveyQuestion
 import com.huskie.dwarves.surveyquestion.exceptions.SurveyQuestionNotFoundException
 import com.huskie.dwarves.surveyquestion.repository.SurveyQuestionRepository
+import jakarta.validation.constraints.Null
+import org.aspectj.weaver.patterns.TypePatternQuestions.Question
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -47,10 +51,11 @@ class SubmissionWorkflowService (
         val questions = questionRepository.findBySurveyIdOrderByDisplayOrderAsc(request.surveyId)
 
         if (request.answers.size != request.answers.distinctBy { it.questionId }.size) {
-            throw IllegalArgumentException("Duplicate questionId detected")
+            throw OverlappingAnswerException()
         }
 
         validateAllRequiredQuestionAnswered(questions, request.answers)
+        validateAnswerTypeCorrect(questions, request.answers)
 
         val submission = Submission(
                 interviewer = interviewer,
@@ -78,6 +83,30 @@ class SubmissionWorkflowService (
                 if (item.isRequired && !answeredIds.contains(item.id)) {
                     throw MissingRequiredAnswerException(questionId)
                 }
+        }
+    }
+
+    private fun validateAnswerTypeCorrect(questions : List<SurveyQuestion>, answerReqs: List<SubmitAnswerRequest>) {
+        val indexToQuestions = HashMap<Long, SurveyQuestion>()
+        for (question in questions) {
+            val questionId = question.id?: throw IllegalStateException("Survey question id cannot be null")
+            indexToQuestions[questionId] = question
+        }
+        for (answerReq in answerReqs) {
+            val question = indexToQuestions[answerReq.questionId]?: throw SurveyQuestionNotFoundException(answerReq.questionId)
+            when (question.questionType) {
+                "TEXT" -> {
+                    if (answerReq.answerText == null) throw IncorrectAnswerTypeException(answerReq.questionId,question
+                            .questionType)
+                }
+                "MCQ" -> {
+                    val optionId = answerReq.selectedOptionId ?: throw IncorrectAnswerTypeException(answerReq.questionId,question
+                            .questionType)
+                    if (!surveyOptionRepository.existsById(optionId)) {
+                        throw SurveyOptionNotFoundException(optionId)
+                    }
+                }
+            }
         }
     }
 
